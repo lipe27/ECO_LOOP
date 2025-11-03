@@ -1,0 +1,561 @@
+/* * PROJECT_NAME: EcoLoop Digital Experience Platform
+ * MODULE_ID: HOME
+ * FILE_NAME: style-home.css
+ * VERSION_CONTROL: v1.0.0-PROD-CRISTAL
+ * AUTHOR_TEAM: Giga-Architects OMEGA-TIER CRISTAL
+ * CREATION_DATE: 2025-11-01
+ * LICENSE_STATUS: PROPRIETARY & CONFIDENTIAL
+ * DEPENDENCIES_EXTERNAL: None (Pure CSS)
+ * DESCRIPTION_EXTENDED: CSS do módulo HOME. Utiliza Design Tokens, BEM e Mobile-First.
+*/
+
+/* --- I. DESIGN TOKENS (Escala de Cores, Tipografia e Espaçamento) --- */
+:root {
+    /* Cores */
+    --color-brand-primary: #00BFA5; /* Ação e Confiança */
+    --color-brand-secondary-dark: #2C3E50; /* Autoridade/Texto Principal */
+    --color-surface-low: #F7F8FC; /* Fundo Suave */
+    --color-surface-high: #FFFFFF; /* Destaque Card */
+    --color-text-strong: var(--color-brand-secondary-dark);
+    --color-text-weak: #6c757d;
+    --color-state-error: #E74C3C;
+    --color-focus-ring: #FF9800; /* WCAG AAA - Alerta */
+
+    /* Espaçamento (Escala de 8px) */
+    --spacing-unit-xxs: 4px;
+    --spacing-unit-xs: 8px;
+    --spacing-unit-sm: 16px;
+    --spacing-unit-md: 32px;
+    --spacing-unit-lg: 64px;
+    --spacing-unit-xl: 96px;
+
+    /* Tipografia */
+    --font-family-headline: 'Poppins', sans-serif;
+    --font-family-body: 'Roboto', sans-serif;
+    --font-weight-bold: 700;
+    --font-weight-semibold: 600;
+    --font-weight-regular: 400;
+    --font-weight-light: 300;
+    --line-height-body: 1.6;
+
+    /* Transição e Animação */
+    --transition-speed-normal: 0.3s;
+    --transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1); /* Ease-out Dramático */
+    
+    /* Bordas e Sombras */
+    --border-radius-default: 8px;
+    --shadow-elevation-low: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- II. GLOBAL RESET & TIPOGRAFIA BASE (Performance) --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family-body);
+    background-color: var(--color-surface-low);
+    color: var(--color-text-strong);
+    line-height: var(--line-height-body);
+}
+
+/* Tipografia Escalar Base */
+.type-display-lg {
+    font-family: var(--font-family-headline);
+    font-size: 2.0rem; /* Mobile Base */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-strong);
+    line-height: 1.2;
+}
+.type-headline-md {
+    font-family: var(--font-family-headline);
+    font-size: 1.8rem;
+    font-weight: var(--font-weight-semibold);
+}
+.type-body {
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-regular);
+}
+.type-body-small {
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-light);
+    color: var(--color-text-weak);
+}
+
+/* --- III. UTILITÁRIOS E GRID BASE (12 Colunas) --- */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-unit-sm);
+}
+.component-section-padding {
+    padding: var(--spacing-unit-lg) 0;
+}
+
+.grid-system {
+    /* Define o grid base para seções */
+    display: block; 
+}
+.grid-12 {
+    /* Grid de 12 colunas para o layout interno (Desktop) */
+    display: grid;
+    gap: var(--spacing-unit-md);
+    grid-template-columns: repeat(12, 1fr);
+}
+/* Mobile: Tudo ocupa 12 colunas (col-span-12 é o padrão) */
+.col-span-12 {
+    grid-column: span 12;
+}
+
+/* Foco Acessível (WCAG AAA) */
+:focus {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 3px;
+    border-radius: var(--border-radius-default);
+}
+
+/* --- IV. COMPONENTE: HEADER NAV GLOBAL (component-header) --- */
+.main-header {
+    background-color: var(--color-surface-high);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-elevation-low);
+    transition: box-shadow var(--transition-speed-normal), background-color var(--transition-speed-normal);
+}
+
+.main-header__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-unit-sm) 0;
+}
+
+.main-header__logo {
+    font-family: var(--font-family-headline);
+    color: var(--color-brand-primary);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.main-header__logo:hover {
+    transform: skewX(-5deg); /* Animação de dinamismo */
+}
+
+/* Navegação */
+.main-nav ul {
+    list-style: none;
+    display: none; /* Mobile-First: Escondido */
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--color-text-strong);
+    padding: var(--spacing-unit-xs) var(--spacing-unit-sm);
+    font-weight: var(--font-weight-semibold);
+    position: relative;
+    transition: color var(--transition-speed-normal);
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-brand-primary);
+    transition: all var(--transition-speed-normal) var(--transition-timing-function);
+    transform: translateX(-50%);
+}
+
+.main-nav a:hover {
+    color: var(--color-brand-primary);
+}
+.main-nav a:hover::after {
+    width: 100%; /* Efeito sublinhado expande no hover */
+}
+
+.main-nav a--active, .main-nav a--active:hover {
+    color: var(--color-brand-primary);
+}
+.main-nav a--active::after {
+    width: 100%; /* Mantém o sublinhado na página ativa */
+}
+
+/* Menu Toggle (Hambúrguer) */
+.menu-toggle {
+    display: block; 
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 1010;
+}
+.menu-toggle__bar {
+    display: block;
+    width: 28px;
+    height: 3px;
+    margin: 6px auto;
+    background-color: var(--color-brand-secondary-dark);
+    transition: all 0.3s ease-in-out;
+}
+/* (Lógica de transformação do X via JS/Class) */
+
+/* --- V. SEÇÃO 1: HOME HERO (home-hero) --- */
+.home-hero {
+    padding-top: 120px; /* Ajuste para header fixo */
+    padding-bottom: var(--spacing-unit-lg);
+    /* Simulação de gradiente de fundo suave */
+    background: linear-gradient(145deg, var(--color-surface-low), #E0E7E9);
+}
+
+.home-hero__content {
+    align-items: center;
+}
+
+.home-hero__title {
+    margin-bottom: var(--spacing-unit-sm);
+    max-width: 90%;
+}
+
+.home-hero__subtitle {
+    margin-bottom: var(--spacing-unit-md);
+    max-width: 95%;
+}
+
+.home-hero__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit-sm);
+}
+
+.home-hero__visual {
+    padding-top: var(--spacing-unit-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.home-hero__img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-default);
+    box-shadow: var(--shadow-elevation-low);
+    transition: filter 0.5s;
+    filter: grayscale(10%) blur(1px); /* Filtro de baixa fidelidade inicial */
+}
+.home-hero__img:hover {
+    filter: grayscale(0%) blur(0); /* Foco no hover */
+}
+
+/* --- VI. COMPONENTE: BOTÕES CTA (component-cta-button) --- */
+.component-cta-button {
+    display: inline-block;
+    padding: 14px 30px;
+    text-decoration: none;
+    font-family: var(--font-family-headline);
+    font-weight: var(--font-weight-semibold);
+    border-radius: 50px;
+    transition: all var(--transition-speed-normal) var(--transition-timing-function);
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.component-cta-button--primary {
+    background-color: var(--color-brand-primary);
+    color: var(--color-surface-high);
+    box-shadow: 0 6px 15px rgba(0, 191, 165, 0.4);
+}
+.component-cta-button--primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 191, 165, 0.6);
+    filter: brightness(1.1); /* Brilho sutil de sucesso */
+}
+
+.component-cta-button--secondary {
+    background: none;
+    color: var(--color-brand-primary);
+    border-color: var(--color-brand-primary);
+}
+.component-cta-button--secondary:hover {
+    background-color: var(--color-brand-primary);
+    color: var(--color-surface-high);
+    transform: translateY(-1px);
+}
+
+/* --- VII. SEÇÃO 2: FATOS (home-facts) --- */
+.home-facts {
+    background-color: var(--color-surface-low);
+    text-align: center;
+}
+.home-facts__title {
+    margin-bottom: var(--spacing-unit-lg);
+}
+.home-facts__grid {
+    gap: var(--spacing-unit-sm); /* Mais compacto no mobile */
+}
+
+.home-facts__card {
+    padding: var(--spacing-unit-md);
+    /* Neumorfismo Suave */
+    background: var(--color-surface-high);
+    border-radius: var(--border-radius-default);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.05), -6px -6px 12px var(--color-surface-high);
+    transition: transform var(--transition-speed-normal);
+    text-align: left;
+    margin-bottom: var(--spacing-unit-sm);
+}
+.home-facts__card:hover {
+    transform: perspective(1000px) rotateX(1deg) translateY(-5px); /* Efeito 3D sutil */
+    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -4px -4px 8px var(--color-surface-high);
+}
+
+.home-facts__icon {
+    font-size: 2rem;
+    color: var(--color-brand-primary);
+    display: block;
+    margin-bottom: var(--spacing-unit-xs);
+}
+.home-facts__card-title {
+    color: var(--color-text-strong);
+    margin-bottom: var(--spacing-unit-xs);
+}
+
+/* --- VIII. COMPONENTE: RODAPÉ GLOBAL (component-footer) --- */
+.main-footer {
+    background-color: var(--color-brand-secondary-dark);
+    color: var(--color-surface-high);
+    padding: var(--spacing-unit-lg) 0;
+    position: relative;
+    overflow: hidden;
+}
+.main-footer__content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-unit-md);
+    z-index: 10;
+    position: relative;
+}
+
+.main-footer__logo-text {
+    font-family: var(--font-family-headline);
+    color: var(--color-brand-primary);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-unit-xs);
+}
+
+.main-footer__social-media {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-unit-xs);
+}
+
+.main-footer__social-link {
+    color: var(--color-surface-high);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+.main-footer__social-link:hover {
+    color: var(--color-brand-primary);
+}
+
+/* Placeholder para simular animação de partículas/fundo animado */
+.main-footer__overlay-particle-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 191, 165, 0.1) 0%, rgba(44, 62, 80, 0) 70%);
+    opacity: 0.3;
+    animation: rotate-particles 30s linear infinite;
+}
+@keyframes rotate-particles {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.2) rotate(360deg); }
+}
+
+/* --- IX. RESPONSIVIDADE DESKTOP (min-width: 768px) --- */
+@media (min-width: 768px) {
+    /* Tipografia Desktop */
+    .type-display-lg {
+        font-size: 2.8rem; 
+    }
+    .type-headline-md {
+        font-size: 2.2rem;
+    }
+
+    /* Navegação Desktop */
+    .menu-toggle {
+        display: none;
+    }
+    .main-nav ul {
+        display: flex;
+        gap: var(--spacing-unit-xs);
+    }
+    .main-nav a {
+        padding: 5px 10px;
+    }
+
+    /* Layout Desktop */
+    .home-hero {
+        padding-top: 150px;
+    }
+    .home-hero__ctas {
+        flex-direction: row;
+        gap: var(--spacing-unit-md);
+    }
+
+    /* Grid Layout - 12 colunas */
+    .col-span-md-7 {
+        grid-column: span 7;
+    }
+    .col-span-md-5 {
+        grid-column: span 5;
+    }
+    .col-span-md-4 {
+        grid-column: span 4;
+    }
+    
+    /* Rodapé Desktop */
+    .main-footer__content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+    .main-footer__social-media {
+        flex-direction: row;
+        gap: var(--spacing-unit-sm);
+        flex-grow: 1;
+        justify-content: center;
+    }
+    .main-footer__copyright {
+        text-align: right;
+    }
+    .main-footer__tagline {
+        max-width: 250px;
+    }
+}
+/* 1. ESTILO DO ÍCONE DE BUSCA NO HEADER */
+.search-toggle {
+    background: none;
+    border: none;
+    color: var(--color-brand-primary); 
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: var(--spacing-unit-md); 
+    z-index: 1000;
+}
+
+/* 2. ESTILO DO MODAL DE BUSCA (Overlay) */
+.search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(18, 25, 30, 0.95); 
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none; 
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.search-modal--active {
+    display: block;
+    opacity: 1;
+}
+
+.search-modal__content {
+    background-color: var(--color-surface-high);
+    max-width: 900px;
+    margin: 10vh auto 0;
+    border-radius: var(--border-radius-default);
+    box-shadow: var(--shadow-elevation-large);
+    padding: var(--spacing-unit-md);
+}
+
+.search-modal__header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--color-surface-low);
+    padding-bottom: var(--spacing-unit-sm);
+    margin-bottom: var(--spacing-unit-md);
+}
+
+.search-modal__input {
+    flex-grow: 1;
+    font-size: 1.5rem;
+    padding: var(--spacing-unit-xs);
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--color-text-normal);
+}
+
+.search-modal__close {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-weak);
+    padding: 0 var(--spacing-unit-sm);
+}
+
+/* 3. ESTILO DOS RESULTADOS */
+.search-results-list {
+    list-style: none;
+    padding: 0;
+    max-height: 70vh; 
+    overflow-y: auto;
+}
+
+.search-result__item {
+    padding: var(--spacing-unit-sm) 0;
+    border-bottom: 1px dashed var(--color-surface-low);
+}
+.search-result__item:last-child {
+    border-bottom: none;
+}
+
+.search-result__link {
+    display: block;
+    color: var(--color-text-normal);
+    text-decoration: none;
+    padding: var(--spacing-unit-xs);
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.search-result__link:hover {
+    background-color: var(--color-surface-low);
+}
+
+.search-result__title {
+    display: block;
+    font-weight: var(--font-weight-bold);
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
+.search-result__snippet {
+    display: block;
+    color: var(--color-text-weak);
+    font-size: 0.9rem;
+}
+
+.search-result__empty {
+    text-align: center;
+    color: var(--color-text-weak);
+    padding: var(--spacing-unit-lg);
+}
